@@ -55,6 +55,18 @@ def FormulaToBDD(formulaList):
 
     return bdd
 
+def Compose(lhs, rhs):
+    X = bddvars('x', 5) # creates an array of BDD vars
+    Y = bddvars('y', 5)
+    Z = bddvars('z', 5)
+    
+    R1 = lhs.compose({X[0]:Z[0], X[1]:Z[1], X[2]:Z[2], X[3]:Z[3], X[4]:Z[4]})
+    R2 = rhs.compose({Z[0]:Y[0], Z[1]:Y[1], Z[2]:Y[2], Z[3]:Y[3], Z[4]:Y[4]})
+    return (R1 and R2).smoothing(Z)
+
+
+
+### Start of Code ####
 if __name__ == "__main__":
     # create sets
     evenSet = []
@@ -128,4 +140,4 @@ if __name__ == "__main__":
     
     ### Compute BDD RR2 for the set R ◦ R, from BDD RR. Herein, RR2 encodes
     ### the set of node pairs such that one can reach the other in two steps.
-    
+    RR2 = Compose(RR, RR)
