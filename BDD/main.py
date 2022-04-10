@@ -1,5 +1,4 @@
 import enum
-from numpy import empty
 from pyeda.inter import *
 
 def TranslateToBinary(n):
@@ -123,8 +122,10 @@ if __name__ == "__main__":
 
     ### Convert Boolean Formulas to BDDs (G, evens, primes)
     # use the expr2bdd function to convert arbitrary expressions to BDDs
-    rr = FormulaToBDD(G_formulas)
-    primeBDD = FormulaToBDD(primeFormulas)
-    evenBDD = FormulaToBDD(evenFormulas)
+    RR = FormulaToBDD(G_formulas)
+    PRIME = FormulaToBDD(primeFormulas)
+    EVEN = FormulaToBDD(evenFormulas)
     
+    ### Compute BDD RR2 for the set R ◦ R, from BDD RR. Herein, RR2 encodes
+    ### the set of node pairs such that one can reach the other in two steps.
     
