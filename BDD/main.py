@@ -1,8 +1,9 @@
 import enum
+from numpy import empty
 from pyeda.inter import *
 
 def TranslateToBinary(n):
-    return bin(n)[2:].zfill(5)
+    return bin(n)[2:].zfill(5) # string of 1s and 0s (5 characters)
 
 # Translates a graph to a boolean formula
 def GraphToBooleanFormula(graph):
@@ -41,8 +42,19 @@ def GraphToBooleanFormula(graph):
         booleanFormula = booleanFormula[:-3] # deletes the ampersand at the end
         R_formulas.append(booleanFormula)
         booleanFormula = "";
+
     return R_formulas
-    
+
+def FormulaToBDD(formulaList):
+    formula = expr(formulaList.pop())
+    bdd = expr2bdd(formula)
+
+    while len(formulaList) > 0:
+        nextFormula = expr(formulaList.pop())
+        nextBDD = expr2bdd(nextFormula)
+        bdd = bdd or nextBDD # appends BDDs with OR operator
+
+    return bdd
 
 if __name__ == "__main__":
     # create sets
@@ -109,4 +121,10 @@ if __name__ == "__main__":
         evenFormulas.append(evenBooleanFormula)
         evenBooleanFormula = ""
 
+    ### Convert Boolean Formulas to BDDs (G, evens, primes)
     # use the expr2bdd function to convert arbitrary expressions to BDDs
+    rr = FormulaToBDD(G_formulas)
+    primeBDD = FormulaToBDD(primeFormulas)
+    evenBDD = FormulaToBDD(evenFormulas)
+    
+    
