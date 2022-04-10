@@ -1,3 +1,4 @@
+import enum
 from pyeda.inter import *
 
 def TranslateToBinary(n):
@@ -5,19 +6,19 @@ def TranslateToBinary(n):
 
 # Translates a graph to a boolean formula
 def GraphToBooleanFormula(graph):
-
-# must convert graph (int, int) into binary pairs
-    binaryList = []
+    # must convert graph (int, int) into binary pairs
+    R_list = [] # set of all possible edges (will be filled below)
+    R_formulas = []
     booleanFormula = "" # will be the boolean formula to return
 
-    # convert the graph's values to binary -> binaryList
+    # convert the graph's values to binary -> R_list
     for edge in graph:
         x = TranslateToBinary(edge[0]) # translates int to 5 digit binary
         y = TranslateToBinary(edge[1])
-        binaryList.append((x, y))
+        R_list.append((x, y))
 
     # nested forloops to convert all binary pairs to boolean formula
-    for binaryEdge in binaryList:
+    for binaryEdge in R_list:
         # formula for all x
         for i, b in enumerate(binaryEdge[0]): # first nodes
             if (b == '0'):
@@ -26,7 +27,8 @@ def GraphToBooleanFormula(graph):
                 booleanFormula += "x" + str(i) + " & "
             else:
                 print ("[Can't Translate Non-Binary in GraphToBooleanFormula()]")
-                return None;
+                quit()
+
         for j, b in enumerate(binaryEdge[1]): # second nodes
             if (b == '0'):
                 booleanFormula += "~y" + str(j) + " & "
@@ -34,14 +36,17 @@ def GraphToBooleanFormula(graph):
                 booleanFormula += "y" + str(j) + " & "
             else:
                 print ("[Can't Translate Non-Binary in GraphToBooleanFormula()]")
-                return None;            
+                quit()            
     
-    return booleanFormula    
+        booleanFormula = booleanFormula[:-3] # deletes the ampersand at the end
+        R_formulas.append(booleanFormula)
+        booleanFormula = "";
+    return R_formulas
+    
 
 if __name__ == "__main__":
     # create sets
     evenSet = []
-
     for n in range(0, 32):
         if n % 2 == 0:
             evenSet.append(n)
@@ -57,7 +62,31 @@ if __name__ == "__main__":
             if ((i + 3) % 32 == j % 32) or ((i + 8) % 32 == j % 32):
                 G_list.append((i, j))
 
-    # Translate G (graph) to a boolean formula
-    G_binary_formula = GraphToBooleanFormula(G_list)
+    # Translate G's edges (R) to boolean formulas
+    G_formulas = GraphToBooleanFormula(G_list)
+    
+    # Translate primeSet into a boolean expression
+    binaryPrimeSet = []
+    primeFormulas = []
+    primeBooleanFormula = ""
 
+    for n in primeSet: # first convert to binary
+        binaryPrimeSet.append(TranslateToBinary(n))
+        
+    # walk through each prime node's binary digits and translate to boolean formula
+    for primeNode in binaryPrimeSet:
+        for i, b in enumerate(primeNode):
+            if (b == '0'):
+                primeBooleanFormula += "~x" + str(i) + " & "
+            elif (b == '1'):
+                primeBooleanFormula += "x" + str(i) + " & "
+            else:
+                print("[Can't do non-binary from prime set]")
+                quit()
+        primeBooleanFormula = primeBooleanFormula[:-3] # deletes the ampersand at the end
+        primeFormulas.append(primeBooleanFormula)
+        primeBooleanFormula = "";
+    
+    # Translate evenSet into a boolean expression
+    
     # use the expr2bdd function to convert arbitrary expressions to BDDs
