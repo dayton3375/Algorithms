@@ -21,18 +21,18 @@ def GraphToBooleanFormula(graph):
     for binaryEdge in R_list:
         # formula for all x
         for i, b in enumerate(binaryEdge[0]): # first nodes
-            if (b == '0'):
+            if b == '0':
                 booleanFormula += "~x" + str(i) + " & "
-            elif (b == '1'):
+            elif b == '1':
                 booleanFormula += "x" + str(i) + " & "
             else:
                 print ("[Can't Translate Non-Binary in GraphToBooleanFormula()]")
                 quit()
 
         for j, b in enumerate(binaryEdge[1]): # second nodes
-            if (b == '0'):
+            if b == '0':
                 booleanFormula += "~y" + str(j) + " & "
-            elif (b == '1'):
+            elif b == '1':
                 booleanFormula += "y" + str(j) + " & "
             else:
                 print ("[Can't Translate Non-Binary in GraphToBooleanFormula()]")
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     # Translate G's edges (R) to boolean formulas
     G_formulas = GraphToBooleanFormula(G_list)
     
-    # Translate primeSet into a boolean expression
+    ### Translate primeSet into a boolean expression
     binaryPrimeSet = []
     primeFormulas = []
     primeBooleanFormula = ""
@@ -76,9 +76,9 @@ if __name__ == "__main__":
     # walk through each prime node's binary digits and translate to boolean formula
     for primeNode in binaryPrimeSet:
         for i, b in enumerate(primeNode):
-            if (b == '0'):
+            if b == '0':
                 primeBooleanFormula += "~x" + str(i) + " & "
-            elif (b == '1'):
+            elif b == '1':
                 primeBooleanFormula += "x" + str(i) + " & "
             else:
                 print("[Can't do non-binary from prime set]")
@@ -87,6 +87,26 @@ if __name__ == "__main__":
         primeFormulas.append(primeBooleanFormula)
         primeBooleanFormula = "";
     
-    # Translate evenSet into a boolean expression
+    ### Translate evenSet into a boolean expression
+    binaryEvenSet = []
+    evenFormulas = []
+    evenBooleanFormula = ""
     
+    for n in evenSet: # convert to binary
+        binaryEvenSet.append(TranslateToBinary(n))
+        
+    # walk through each even node's binary digits and translate to boolean formula
+    for evenNode in binaryEvenSet:
+        for j, b in enumerate(evenNode):
+            if b == '0':
+                evenBooleanFormula += "~y" + str(j) + " & "
+            elif b == '1':
+                evenBooleanFormula += "y" + str(j) + " & "
+            else:
+                print("[Can't do non-binary from even set]")
+                quit()               
+        evenBooleanFormula = evenBooleanFormula[:-3] # deletes the ampersand at the end
+        evenFormulas.append(evenBooleanFormula)
+        evenBooleanFormula = ""
+
     # use the expr2bdd function to convert arbitrary expressions to BDDs
