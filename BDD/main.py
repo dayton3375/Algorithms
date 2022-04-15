@@ -232,6 +232,7 @@ if __name__ == "__main__":
     EVEN = FormulaToBDD(evenFormulas)
     
     ### Run Tests
+    print("[TESTS FOR RR, PRIME, AND EVEN]")
     TestRR(RR, 27, 3)       # TRUE
     TestRR(RR, 16, 20)      # FALSE
     TestOneValue(EVEN, 14)  # TRUE
@@ -243,11 +244,16 @@ if __name__ == "__main__":
     ### the set of node pairs such that one can reach the other in two steps.
     RR2 = Compose(RR, RR)
     
+    print("\n[TESTS FOR RR2]")
+    TestRR(RR2, 27, 6)      # TRUE
+    TestRR(RR2, 27, 9)      # FALSE
+    
     ###Compute the transitive closure RR2star of RR2. Herein, RR2star encodes 
     # the set of all node pairs such that one can reach the other in a positive even number of steps.
     RR2star = TransitiveClosure(RR2)
     
     ### Statement A: ∀u. (PRIME(u) → ∃v. (EVEN(v)∧RR2star(u,v))).
+    print("\n[TESTING STATEMENT A]")
     statementA = TestStatementA(RR2star, PRIME, EVEN)
     
     if (statementA):
